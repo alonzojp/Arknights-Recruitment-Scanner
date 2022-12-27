@@ -24,22 +24,33 @@ public class HelloController {
     protected void onFileButtonClick() throws IOException {
         FileChooser fc = new FileChooser();
         Tesseract tr = new Tesseract();
-        tr.setTessVariable("user_defined_dpi", "300");
+        tr.setTessVariable("user_defined_dpi", "600");
         tr.setTessVariable("tessedit_char_whitelist","ACDEFGHMNOPRSTVabcdefghiklmnoprstuvwy- ");
 
         File file = fc.showOpenDialog(new Stage());
         BufferedImage image = ImageIO.read(file);
-        BufferedImage croppedImage = image.getSubimage(810,550, 700,160);
+        int scaledX = (int) (image.getWidth() / 3.288);
+        int scaledY = (int) (image.getHeight() / 1.933);
+        int scaledW = (int) (image.getWidth() / 2.844);
+        int scaledH = (int) (image.getHeight() / 7.248);
+
+        BufferedImage croppedImage = image.getSubimage(scaledX, scaledY, scaledW, scaledH);
 
         File processor = new File("src/main/resources/imageProcessor.png");
 
+        // I cannot really fully understand what is happening here, but after
+        // a lot of testing and research this is basically creating a palette
+        // of colors that are then used to reconstruct the image. After a lot
+        // of trial and error, it seems that by setting the bytes to the
+        // values below, only the colors white and black are produced, and
+        // this is leading to the most accurate OCR readings.
         IndexColorModel cm = new IndexColorModel(
-                3, // 3 bits of color
+                1, // 3 bits of color
                 6, // (Only using 6)
                 //          RED  GREEN1  GREEN2  BLUE  WHITE BLACK
-                new byte[]{-100,     0,     0,    0,    -1,     0},
-                new byte[]{   0,  -100,    60,    0,    -1,     0},
-                new byte[]{   0,     0,     0, -100,    -1,     0});
+                new byte[]{   0,     0,     0,    0,    -1,     0},
+                new byte[]{   0,     0,     0,    0,    -1,     0},
+                new byte[]{   0,     0,     0,    0,    -1,     0});
 
         // draw source image on new one, with custom palette
         BufferedImage img = new BufferedImage(
@@ -52,10 +63,8 @@ public class HelloController {
 
         ImageIO.write(img,"png", processor);
 
-//        image = ImageIO.read(file);
-//
-//        int width = image.getWidth();
-//        int height = image.getHeight();
+//        int width = croppedImage.getWidth();
+//        int height = croppedImage.getHeight();
 //
 //        for (int y = 0; y < height; y++) {
 //            for (int x = 0; x < width; x++) {
@@ -79,7 +88,7 @@ public class HelloController {
 //                image.setRGB(x, y, p);
 //            }
 //        }
-        
+
         try {
             tr.setDatapath("src/main/resources/com.example.tesseractfiles/TesseractFiles/Tess4J");
             String text = tr.doOCR(processor);
@@ -89,8 +98,5 @@ public class HelloController {
             System.out.println(e.toString());
         }
     }
-
-
-
 
 }
