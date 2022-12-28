@@ -9,6 +9,7 @@ import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -67,26 +68,213 @@ public class HelloController {
             tr.setDatapath("src/main/resources/com.example.tesseractfiles/TesseractFiles/Tess4J");
             String scannedText = tr.doOCR(processor);
 
-            if(scannedText.contains("Fast")) {
-                System.out.println("4* Found!");
-                System.out.println(scannedText);
-            }
-            else {
-                System.out.println("No good combinations found.");
-                System.out.println(scannedText);
-            }
+            findCombinations(scannedText);
 
-//            String[] processedText = scannedText.split(" ");
+//            String[] splitText = scannedText.split(" ");
 //
-//            for(int i = 0; i < processedText.length; i++) {
-//                if(processedText[i].length() > 3) {
-//                    System.out.println(processedText[i]);
+//            ArrayList<String> processedTags = new ArrayList<String>();
+//
+//            for(int i = 0; i < splitText.length; i++) {
+//                if(splitText[i].length() >= 3) {
+//                    processedTags.add(splitText[i]);
 //                }
 //            }
+//
+//            System.out.println(processedTags);
+//            System.out.println(processedTags.contains("Defense"));
+
         }
         catch(TesseractException e) {
             System.out.println(e.toString());
         }
     }
 
+    private void findCombinations(String tags) {
+        System.out.println(tags);
+        String oneStarAlert = "";
+        String fourStarAlert = "";
+        String fiveStarAlert = "";
+        String sixStarAlert = "";
+
+        if(tags.contains("Top")) {
+            sixStarAlert = "Top Operator\n";
+        }
+
+        if(tags.contains("Senior")) {
+            fiveStarAlert = fiveStarAlert + "Senior Operator\n";
+        }
+        if(tags.contains("Crowd")) {
+            fiveStarAlert = fiveStarAlert + "Crowd Control\n";
+        }
+        if(tags.contains("Summon")) {
+            fiveStarAlert = fiveStarAlert + "Summon\n";
+        }
+        if(tags.contains("Nuker")) {
+            fiveStarAlert = fiveStarAlert + "Nuker\n";
+        }
+
+        if(tags.contains("Debuff")) {
+            fourStarAlert += "Debuff\n";
+
+            if(tags.contains("Specialist")) {
+                fiveStarAlert += "Debuff + Specialist\n";
+            }
+            if(tags.contains("Fast")) {
+                fiveStarAlert += "Debuff + Fast-Redeploy\n";
+            }
+            if(tags.contains("AoE")) {
+                fiveStarAlert += "Debuff + AoE\n";
+            }
+            if(tags.contains("Melee")) {
+                fiveStarAlert += "Debuff + Melee\n";
+            }
+            if(tags.contains("Supporter")) {
+                fiveStarAlert += "Debuff + Supporter\n";
+            }
+        }
+
+        if(tags.contains("Shift")) {
+            fourStarAlert += "Shift\n";
+
+            if(tags.contains("Slow")) {
+                fiveStarAlert += "Shift + Slow\n";
+            }
+            if(tags.contains("DPS")) {
+                fiveStarAlert += "Shift + DPS\n";
+            }
+            if(tags.contains("Defense")) {
+                fiveStarAlert += "Shift + Defense\n";
+            }
+            if(tags.contains("Defender")) {
+                fiveStarAlert += "Shift + Defender\n";
+            }
+        }
+
+        if(tags.contains("Specialist")) {
+            fourStarAlert += "Specialist\n";
+
+            if(tags.contains("Slow")) {
+                fiveStarAlert += "Specialist + Slow\n";
+            }
+            if(tags.contains("DPS")) {
+                fiveStarAlert += "Specialist + DPS\n";
+            }
+            if(tags.contains("Survival")) {
+                fiveStarAlert += "Specialist + Survival\n";
+            }
+        }
+
+        if(tags.contains("Support ")) {
+            fourStarAlert += "Support\n";
+
+            if(tags.contains("Recovery")) {
+                fiveStarAlert += "Support + DP-Recovery\n";
+            }
+            if(tags.contains("Vanguard")) {
+                fiveStarAlert += "Support + Vanguard\n";
+            }
+        }
+
+        if(tags.contains("Fast")) {
+            fourStarAlert += "Fast-Redeploy\n";
+        }
+
+        if(tags.contains("Slow")) {
+            if(tags.contains("Healing")) {
+                fiveStarAlert += "Slow + Healing\n";
+            }
+            if(tags.contains("DPS") && tags.contains("Caster")) {
+                fiveStarAlert += "Slow + DPS + Caster\n";
+            }
+
+            if(tags.contains("DPS")) {
+                fourStarAlert += "Slow + DPS\n";
+            }
+            if(tags.contains("Caster")) {
+                fourStarAlert += "Slow + Caster\n";
+            }
+            if(tags.contains("AoE")) {
+                fourStarAlert += "Slow + AoE\n";
+            }
+            if(tags.contains("Sniper")) {
+                fourStarAlert += "Slow + Sniper\n";
+            }
+            if(tags.contains("Melee")) {
+                fourStarAlert += "Slow + Melee\n";
+            }
+            if(tags.contains("Guard")) {
+                fourStarAlert += "Slow + Guard\n";
+            }
+        }
+
+        if(tags.contains("Healing")) {
+            if(tags.contains("Caster")) {
+                fiveStarAlert += "Healing + Caster\n";
+            }
+
+            if(tags.contains("Recovery")) {
+                fourStarAlert += "Healing + DP-Recovery\n";
+            }
+            if(tags.contains("Vanguard")) {
+                fourStarAlert += "Healing + Vanguard\n";
+            }
+        }
+
+        if(tags.contains("Survival")) {
+            if(tags.contains("Defense")) {
+                fiveStarAlert += "Survival + Defense\n";
+            }
+            if(tags.contains("Defender")) {
+                fiveStarAlert += "Survival + Defender\n";
+            }
+
+            if(tags.contains("Ranged")) {
+                fourStarAlert += "Survival + DP-Ranged\n";
+            }
+            if(tags.contains("Sniper")) {
+                fourStarAlert += "Survival + Sniper\n";
+            }
+        }
+
+        if(tags.contains("DPS")) {
+            if(tags.contains("Defense")) {
+                fiveStarAlert += "DPS + Defense\n";
+            }
+            if(tags.contains("Defender")) {
+                fiveStarAlert += "DPS + Defender\n";
+            }
+            if(tags.contains("Healing")) {
+                fiveStarAlert += "DPS + Healing\n";
+            }
+            if(tags.contains("Supporter")) {
+                fiveStarAlert += "DPS + Supporter\n";
+            }
+        }
+
+        if(tags.contains("Guard")) {
+            if(tags.contains("Defense")) {
+                fiveStarAlert += "Guard + Defense\n";
+            }
+        }
+
+        if(tags.contains("Robot")) {
+            oneStarAlert = "Robot\n";
+        }
+
+        if(!sixStarAlert.isEmpty()) {
+            System.out.println("Six Star Combinations (by row): \n" + sixStarAlert);
+        }
+        else if(!fiveStarAlert.isEmpty()) {
+            System.out.println("Five Star Combinations (by row): \n" + fiveStarAlert);
+        }
+        else if(!fourStarAlert.isEmpty()) {
+            System.out.println("Four Star Combinations (by row): \n" + fourStarAlert);
+        }
+        else if(!oneStarAlert.isEmpty()) {
+            System.out.println("One Star Combinations (by row): \n" + oneStarAlert);
+        }
+        else {
+            System.out.println("No Combinations Found.");
+        }
+    }
 }
