@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.sourceforge.tess4j.Tesseract;
@@ -22,25 +24,33 @@ import net.sourceforge.tess4j.TesseractException;
 public class HomeController {
 
     @FXML
-    private Button fileButton;
-
-    @FXML
     Label rarityLabel;
 
     @FXML
     TextArea tagsTextArea;
+
+    String defaultFilePath = "";
+
+    @FXML
+    protected void onDirectoryButtonClick() {
+        DirectoryChooser dc = new DirectoryChooser();
+        File directoryFile = dc.showDialog(new Stage());
+        defaultFilePath = directoryFile.getAbsolutePath();
+
+        rarityLabel.setText("Screenshot Directory Set!");
+    }
 
     @FXML
     protected void onFileButtonClick() throws IOException {
         rarityLabel.setText("");
         tagsTextArea.setText("");
 
-        FileChooser fc = new FileChooser();
+        File file = getLatestFilefromDir(defaultFilePath);
+
         Tesseract tr = new Tesseract();
         tr.setTessVariable("user_defined_dpi", "600");
         tr.setTessVariable("tessedit_char_whitelist","ACDEFGHMNOPRSTVabcdefghiklmnoprstuvwy- ");
 
-        File file = fc.showOpenDialog(new Stage());
         BufferedImage image = ImageIO.read(file);
         int scaledX = (int) (image.getWidth() / 3.288);
         int scaledY = (int) (image.getHeight() / 1.933);
@@ -293,4 +303,21 @@ public class HomeController {
             rarityLabel.setText("No Combinations Found.");
         }
     }
+
+    private File getLatestFilefromDir(String dirPath){
+        File dir = new File(dirPath);
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return null;
+        }
+
+        File lastModifiedFile = files[0];
+        for (int i = 1; i < files.length; i++) {
+            if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+                lastModifiedFile = files[i];
+            }
+        }
+        return lastModifiedFile;
+    }
+
 }
