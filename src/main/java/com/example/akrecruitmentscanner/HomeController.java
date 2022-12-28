@@ -5,6 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.awt.*;
+
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.awt.image.BufferedImage;
@@ -16,13 +19,22 @@ import javafx.stage.Stage;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-public class HelloController {
+public class HomeController {
 
     @FXML
     private Button fileButton;
 
     @FXML
+    Label rarityLabel;
+
+    @FXML
+    TextArea tagsTextArea;
+
+    @FXML
     protected void onFileButtonClick() throws IOException {
+        rarityLabel.setText("");
+        tagsTextArea.setText("");
+
         FileChooser fc = new FileChooser();
         Tesseract tr = new Tesseract();
         tr.setTessVariable("user_defined_dpi", "600");
@@ -104,7 +116,7 @@ public class HelloController {
             fiveStarAlert = fiveStarAlert + "Senior Operator\n";
         }
         if(tags.contains("Crowd")) {
-            fiveStarAlert = fiveStarAlert + "Crowd Control\n";
+            fiveStarAlert = fiveStarAlert + "Crowd-Control\n";
         }
         if(tags.contains("Summon")) {
             fiveStarAlert = fiveStarAlert + "Summon\n";
@@ -262,19 +274,23 @@ public class HelloController {
         }
 
         if(!sixStarAlert.isEmpty()) {
-            System.out.println("Six Star Combinations (by row): \n" + sixStarAlert);
+            rarityLabel.setText("6* Found!");
+            tagsTextArea.setText(sixStarAlert);
         }
         else if(!fiveStarAlert.isEmpty()) {
-            System.out.println("Five Star Combinations (by row): \n" + fiveStarAlert);
+            rarityLabel.setText("5* Found!");
+            tagsTextArea.setText(fiveStarAlert);
         }
         else if(!fourStarAlert.isEmpty()) {
-            System.out.println("Four Star Combinations (by row): \n" + fourStarAlert);
+            rarityLabel.setText("4* Found!");
+            tagsTextArea.setText(fourStarAlert);
         }
         else if(!oneStarAlert.isEmpty()) {
-            System.out.println("One Star Combinations (by row): \n" + oneStarAlert);
+            rarityLabel.setText("1* Found!");
+            tagsTextArea.setText(oneStarAlert);
         }
         else {
-            System.out.println("No Combinations Found.");
+            rarityLabel.setText("No Combinations Found.");
         }
     }
 }

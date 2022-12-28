@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.akrecruitmentscanner.HomeController">
+   <children>
+      <Button fx:id="fileButton" layoutX="239.0" layoutY="151.0" mnemonicParsing="false" onAction="#onFileButtonClick" text="Select a Screenshot!" />
+      <Label layoutX="136.0" layoutY="39.0" text="Arknights Recruitment Scanner">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="rarityLabel" alignment="CENTER" layoutX="148.0" layoutY="194.0" prefHeight="18.0" prefWidth="303.0" />
+      <TextArea fx:id="tagsTextArea" layoutX="196.0" layoutY="226.0" prefHeight="63.0" prefWidth="208.0" />
+   </children>
+</AnchorPane>
