@@ -1,23 +1,24 @@
 package com.example.akrecruitmentscanner;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.awt.*;
 
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+
 import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.security.cert.PolicyNode;
 import javax.imageio.ImageIO;
 
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
@@ -41,9 +42,14 @@ public class HomeController {
     }
 
     @FXML
-    protected void onFileButtonClick() throws IOException {
+    protected int onFileButtonClick() throws IOException {
         rarityLabel.setText("");
         tagsTextArea.setText("");
+
+        if(defaultFilePath.isEmpty()) {
+            rarityLabel.setText("Please set the screenshot directory first!");
+            return 0;
+        }
 
         File file = getLatestFilefromDir(defaultFilePath);
 
@@ -109,6 +115,8 @@ public class HomeController {
         catch(TesseractException e) {
             System.out.println(e.toString());
         }
+
+        return 0;
     }
 
     private void findCombinations(String tags) {
@@ -301,6 +309,9 @@ public class HomeController {
         }
         else {
             rarityLabel.setText("No Combinations Found.");
+            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
+            delay.setOnFinished(e -> rarityLabel.setText(""));
+            delay.play();
         }
     }
 
